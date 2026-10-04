@@ -1,0 +1,27 @@
+Senior Full Stack Engineer
+
+About the role
+We are looking for a Senior Full Stack Engineer to build and scale our
+customer-facing web platform.
+
+Required skills
+- Strong JavaScript and TypeScript
+- React and Redux for frontend development
+- Node.js and Express for backend services
+- REST API design
+- PostgreSQL
+- 3+ years of professional experience
+
+Preferred skills
+- Docker
+- Kubernetes
+- AWS
+- CI/CD
+
+Minimum qualifications
+Bachelor's degree in Computer Science or equivalent.
+
+Responsibilities
+- Design and ship features across the full stack
+- Review code and mentor junior engineers
+- Improve application performance and reliability

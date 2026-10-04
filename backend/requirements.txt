@@ -1,0 +1,33 @@
+# ---------------------------------------------------------------------------
+# AI Resume & Job Matching System - backend dependencies
+# Install:  pip install -r requirements.txt
+# ---------------------------------------------------------------------------
+
+# --- Web framework ---------------------------------------------------------
+fastapi==0.115.6
+uvicorn[standard]==0.34.0
+python-multipart==0.0.20
+
+# --- Validation / config ---------------------------------------------------
+pydantic==2.10.5
+pydantic-settings==2.7.1
+python-dotenv==1.0.1
+
+# --- Database --------------------------------------------------------------
+SQLAlchemy==2.0.37
+
+# --- HTTP client (calls the NVIDIA NIM OpenAI-compatible API) --------------
+httpx==0.28.1
+
+# --- Resume processing -----------------------------------------------------
+PyMuPDF==1.25.2
+
+# --- Embeddings (semantic similarity component of every match score) -------
+# This is a HARD dependency: matching calls encode() for both the resume and
+# the job description. Without it the semantic component cannot be computed.
+# It pulls in PyTorch, so the first install is large; the model itself is
+# downloaded once on first use and then cached.
+sentence-transformers==3.3.1
+
+# --- Testing ---------------------------------------------------------------
+pytest==9.1.1

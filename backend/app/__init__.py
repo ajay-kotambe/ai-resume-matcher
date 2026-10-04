@@ -1,0 +1,1 @@
+"""Root package marker for the backend application."""
