@@ -39,7 +39,12 @@ async def lifespan(_: FastAPI) -> AsyncIterator[None]:
     except Exception:  # noqa: BLE001 - never block startup on DB issues
         logger.exception("Database initialisation failed; continuing anyway")
 
-    logger.info("%s v%s started (env=%s)", settings.PROJECT_NAME, settings.VERSION, settings.ENVIRONMENT)
+    logger.info(
+        "%s v%s started (env=%s)",
+        settings.PROJECT_NAME,
+        settings.VERSION,
+        settings.ENVIRONMENT,
+    )
     yield
 
     engine.dispose()
@@ -86,7 +91,9 @@ async def add_process_time_header(request: Request, call_next):
 
     started = time.perf_counter()
     response = await call_next(request)
-    response.headers["X-Process-Time"] = f"{(time.perf_counter() - started) * 1000:.2f}ms"
+    response.headers["X-Process-Time"] = (
+        f"{(time.perf_counter() - started) * 1000:.2f}ms"
+    )
     return response
 
 
@@ -94,7 +101,9 @@ async def add_process_time_header(request: Request, call_next):
 # Error handling
 # ---------------------------------------------------------------------------
 @app.exception_handler(RequestValidationError)
-async def validation_exception_handler(_: Request, exc: RequestValidationError) -> JSONResponse:
+async def validation_exception_handler(
+    _: Request, exc: RequestValidationError
+) -> JSONResponse:
     """Return a consistent 422 payload for request validation errors."""
 
     # Pydantic error payloads can contain non-serialisable ctx objects.
@@ -172,4 +181,14 @@ async def root_health() -> dict:
         "success": True,
         "status": "ok",
         "version": settings.VERSION,
+    }
+
+
+@app.get("/debug-routes")
+async def debug_routes():
+    return {
+        "routes": [
+            {"path": route.path, "methods": list(route.methods or [])}
+            for route in app.routes
+        ]
     }
