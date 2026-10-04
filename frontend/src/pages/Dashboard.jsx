@@ -2,6 +2,7 @@ import { useCallback, useState } from 'react'
 import ResumeUploader from '../components/ResumeUploader'
 import JobDescriptionInput from '../components/JobDescriptionInput'
 import ProcessingOverlay from '../components/ProcessingOverlay'
+import DemoEnvironmentNotice from '../components/DemoEnvironmentNotice'
 import JobSummaryCard from '../components/JobSummaryCard'
 import CandidateCard from '../components/CandidateCard'
 import SummaryBar from '../components/SummaryBar'
@@ -87,6 +88,8 @@ export default function Dashboard() {
           deterministic scores — plus an AI-written explanation for every candidate.
         </p>
       </section>
+
+      <DemoEnvironmentNotice />
 
       {!isOnline && !isProcessing && (
         <div className="rounded-lg border border-amber-300 bg-amber-50 px-4 py-3 text-sm text-amber-800">

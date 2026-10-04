@@ -122,6 +122,12 @@ async def analyze_with_upload(
 
     resumes, upload_errors = await _ingest_files(db, files)
     if not resumes:
+        # Re-submitting the same files (the normal case when a demo is run
+        # twice) hits content-hash duplicate detection. Reuse the stored copies
+        # instead of failing the whole batch, so the flow stays repeatable.
+        duplicates = [e for e in upload_errors if e.get("error") == "duplicate_upload"]
+        resumes = _select_resumes(db, None) if duplicates else []
+    if not resumes:
         raise NoResumesUploadedError(
             "None of the uploaded files could be processed.",
             details={"errors": upload_errors},
