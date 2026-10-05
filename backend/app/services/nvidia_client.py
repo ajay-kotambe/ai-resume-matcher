@@ -99,6 +99,8 @@ class NvidiaNIMClient:
         }
         if response_format:
             payload["response_format"] = response_format
+        # Disable reasoning/thinking for structured JSON with Nemotron
+        payload["chat_template_kwargs"] = {"enable_thinking": False}
 
         attempts = max(1, self.config.NVIDIA_MAX_RETRIES + 1)
         last_exc: Exception | None = None
@@ -127,13 +129,33 @@ class NvidiaNIMClient:
 
                 content = _extract_content(data)
                 usage = data.get("usage") or {}
-                logger.info(
-                    "NVIDIA NIM ok model=%s latency=%sms tokens=%s/%s",
-                    model_name,
-                    latency_ms,
-                    usage.get("prompt_tokens", 0),
-                    usage.get("completion_tokens", 0),
-                )
+                try:
+                    finish_reason = None
+                    if isinstance(data, dict) and data.get("choices"):
+                        ch0 = data["choices"][0]
+                        if isinstance(ch0, dict):
+                            finish_reason = ch0.get("finish_reason")
+                    content_stripped = str(content)
+                    logger.info(
+                        "NVIDIA NIM ok model=%s latency=%sms tokens=%s/%s finish_reason=%s content_len=%s starts=%s ends=%s has_fence=%s",
+                        model_name,
+                        latency_ms,
+                        usage.get("prompt_tokens", 0),
+                        usage.get("completion_tokens", 0),
+                        finish_reason,
+                        len(content_stripped),
+                        content_stripped[:30].strip(),
+                        content_stripped[-30:].strip() if len(content_stripped) > 60 else content_stripped.strip(),
+                        "```" in content_stripped,
+                    )
+                except Exception:
+                    logger.info(
+                        "NVIDIA NIM ok model=%s latency=%sms tokens=%s/%s",
+                        model_name,
+                        latency_ms,
+                        usage.get("prompt_tokens", 0),
+                        usage.get("completion_tokens", 0),
+                    )
                 return AIResult(
                     content=content,
                     model=model_name,
