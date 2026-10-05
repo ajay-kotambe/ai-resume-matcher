@@ -155,7 +155,7 @@ def _extract_with_ai(text: str) -> tuple[dict, AIResult]:
         RESUME_SYSTEM_PROMPT,
         prompt,
         temperature=0.0,
-        max_tokens=3000,
+        max_tokens=1000,
     )
     return _validate_ai_payload(data), result
 

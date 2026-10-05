@@ -49,8 +49,8 @@ class Settings(BaseSettings):
     NVIDIA_BASE_URL: str = "https://integrate.api.nvidia.com/v1"
     NVIDIA_MODEL: str = "deepseek-ai/deepseek-v4.1-flash"
     NVIDIA_EMBEDDING_MODEL: str = "nvidia/nv-embedqa-e5-v5"
-    NVIDIA_TIMEOUT: int = 120
-    NVIDIA_MAX_RETRIES: int = 2
+    NVIDIA_TIMEOUT: int = 300
+    NVIDIA_MAX_RETRIES: int = 3
 
     # When no API key is configured the extraction service falls back to the
     # deterministic regex heuristic so the demo keeps working offline.
